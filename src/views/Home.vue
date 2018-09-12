@@ -10,9 +10,13 @@
 import HelloWorld from '@/components/HelloWorld.vue';
 
 export default {
-  name: 'home',
+  name: 'Home',
   components: {
     HelloWorld,
+  },
+  beforeRouteEnter(to, from, next) {
+    console.log(to, from, next);
+    next();
   },
 };
 </script>
