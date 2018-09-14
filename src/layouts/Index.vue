@@ -23,23 +23,24 @@
         />
       </el-tabs>
       <el-main>
-      <pk-keep-alive :updateComponentsKey="updateKey" ref="keepAlive">
-        <router-view/>
-      </pk-keep-alive>
-    </el-main>
+        <transition name="slide-fade">
+        <lx-keep-alive :updateComponentsKey="updateKey" ref="keepAlive">
+          <router-view/>
+        </lx-keep-alive>
+        </transition>
+      </el-main>
     </el-container>
-
   </el-container>
 </el-container>
 </template>
 <script>
 import Vue from 'vue';
 import MenuItem from './MenuItem.vue';
-import PkKeepAlive from '../components/KeepAlive';
+import LxKeepAlive from '../components/LxKeepAlive';
 
 export default {
   name: 'home',
-  components: { MenuItem, PkKeepAlive },
+  components: { MenuItem, LxKeepAlive },
   data() {
     return {
       tabs: {},
@@ -52,16 +53,13 @@ export default {
     routes() {
       return this.$router.options.routes;
     },
-    includedComponents() {
-      console.log(1111);
-      return 'about';
-    },
   },
   beforeRouteEnter(to, from, next) {
     next();
   },
   beforeRouteUpdate(to, from, next) {
-    // this.tabs[to.name] = to;
+    this.tabs[to.path] = to;
+    console.log(to);
     next();
   },
   mounted() {
@@ -75,18 +73,19 @@ export default {
       this.$refs.keepAlive.removeCacheByKey(e);
     },
     onTabClick(tab) {
+      const { $vnode } = tab;
+      console.log(tab, $vnode);
+      const componentOptions = $vnode && $vnode.componentOptions;
+      const key = $vnode.key == null
+        // same constructor may get registered as different local components
+        // so cid alone is not enough (#3269)
+        ? componentOptions.Ctor.cid + (componentOptions.tag ? (`::${componentOptions.tag}`) : '')
+        : $vnode.key;
+      console.log(key);
       this.$router.push({ name: tab.name });
     },
-    includesSym(list, o, sym) {
-      for (let i = 0; i < list.length; i += 1) {
-        if (list[i][sym] === o[sym]) {
-          return true;
-        }
-      }
-      return false;
-    },
-    updateKey(key) {
-      this.tabs[key] = this.$route;
+    updateKey() {
+      this.$set(this.tabs, this.$route.path, this.$route);
     },
   },
 };
@@ -106,4 +105,18 @@ body, html
   background-color #D3DCE6
 .el-main
   background-color #FFF
+
+  /* 可以设置不同的进入和离开动画 */
+/* 设置持续时间和动画函数 */
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active for below version 2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
+}
 </style>

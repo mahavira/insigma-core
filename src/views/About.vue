@@ -7,7 +7,7 @@
 </template>
 <script>
 export default {
-  name: 'about',
+  name: 'About',
   data() {
     return {
       msg: '1',
@@ -31,10 +31,8 @@ export default {
     });
   },
   activated() {
-    console.log('activated');
   },
   deactivated() {
-    console.log('deactivated');
   },
 };
 </script>
