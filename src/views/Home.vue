@@ -9,12 +9,11 @@
 import HelloWorld from '@/components/HelloWorld.vue';
 
 export default {
-  name: 'Home',
+  name: 'about',
   components: {
     HelloWorld,
   },
   beforeRouteEnter(to, from, next) {
-    console.log(to, from, next);
     next();
   },
 };

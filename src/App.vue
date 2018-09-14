@@ -1,7 +1,5 @@
 <template>
-  <el-container>
-    <router-view/>
-  </el-container>
+  <router-view/>
 </template>
 <script>
 export default {
