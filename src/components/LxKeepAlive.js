@@ -1,3 +1,5 @@
+import { mapMutations, mapActions } from 'vuex';
+import { ADD, REMOVE } from '../store/modules/tabs/types';
 import { matches, remove, isDef } from '../shared/util';
 
 function isAsyncPlaceholder(node) {
@@ -13,7 +15,7 @@ function getFirstComponentChild(children) {
       }
     }
   }
-  return false;
+  return null;
 }
 
 function getComponentName(opts) {
@@ -28,6 +30,7 @@ function pruneCacheEntry(cache, key, keys, current) {
   cache[key] = null;
   remove(keys, key);
 }
+
 function pruneCache({ cache, keys, _vnode }, filter) {
   Object.keys(cache).forEach((key) => {
     const cachedNode = cache[key];
@@ -44,25 +47,19 @@ const patternTypes = [String, RegExp, Array];
 
 export default {
   name: 'LxKeepAlive',
-  abstract: true,
-
+  abstract: false,
   props: {
     include: patternTypes,
     exclude: patternTypes,
     max: [String, Number],
-    updateComponentsKey: Function,
   },
-
   data() {
     return {
-      cache: Object.create(null),
     };
   },
-
   created() {
-    // this.cache = Object.create(null);
+    this.cache = Object.create(null);
     this.keys = [];
-    // this.$data = { cache: Object.create(null) };
   },
   mounted() {
     this.$watch('include', (val) => {
@@ -71,17 +68,22 @@ export default {
     this.$watch('exclude', (val) => {
       pruneCache(this, name => !matches(val, name));
     });
+    // 当移除标签item时，也清除对应的cache
+    this.$store.subscribe((mutation) => {
+      if (mutation.type === REMOVE) {
+        pruneCacheEntry(this.cache, mutation.payload, this.keys);
+      }
+    });
   },
   destroyed() {
     Object.keys(this.cache).forEach(key => pruneCacheEntry(this.cache, key, this.keys));
   },
   methods: {
-    removeCacheByKey(key) {
-      pruneCacheEntry(this.cache[key]);
-      this.cache[key] = null;
-    },
+    ...mapMutations([REMOVE]),
+    ...mapActions([ADD]),
   },
   render() {
+    console.log('keep-alive');
     const slot = this.$slots.default;
     const vnode = getFirstComponentChild(slot);
     const componentOptions = vnode && vnode.componentOptions;
@@ -94,18 +96,34 @@ export default {
         (include && (!name || !matches(include, name))) ||
         // excluded
         (exclude && name && matches(exclude, name))
-      ) {
-        return vnode;
-      }
-
+      ) return vnode;
       const { cache, keys } = this;
-      const key = vnode.key == null
+      let key = vnode.key == null
         // same constructor may get registered as different local components
         // so cid alone is not enough (#3269)
         ? componentOptions.Ctor.cid + (componentOptions.tag ? (`::${componentOptions.tag}`) : '')
         : vnode.key;
-      console.log(vnode, vnode.tag);
-      if (this.updateComponentsKey) this.updateComponentsKey(key);
+      key = `_${key}`;
+
+      const { tmp } = this.$router;
+      if (tmp && tmp.replace) {
+        const oldKey = tmp.key;
+        if (oldKey !== key) {
+          pruneCacheEntry(this.cache, oldKey, this.keys);
+          this.$nextTick(() => {
+            this[REMOVE](oldKey);
+          });
+        }
+        delete this.$router.tmp;
+      }
+      this.$nextTick(() => this[ADD]({
+        key,
+        item: {
+          path: this.$route.path,
+          fullPath: this.$route.fullPath,
+          name: this.$route.name,
+        },
+      }));
       if (cache[key]) {
         vnode.componentInstance = cache[key].componentInstance;
         // make current key freshest

@@ -1,14 +1,18 @@
 <template>
   <div class="post">
     <h1>POST</h1>
-    <router-link v-for="post in posts"
+    <input type="text">
+    <router-link v-for="post in posts" replace
       :key="post.id" :to="'/dashboard/post/'+post.id">{{post.title + ' | '}}</router-link>
-    <router-view/>
+    <router-view></router-view>
   </div>
 </template>
 <script>
+import LxRouterView from '../components/LxRouterView';
+
 export default {
   name: 'Post',
+  components: { LxRouterView },
   data() {
     return {
       posts: [{
@@ -23,11 +27,12 @@ export default {
       }],
     };
   },
+  mounted() {
+    // console.log('post mounted');
+  },
   activated() {
-    console.log('ctivated');
   },
   deactivated() {
-    console.log('eactivated');
   },
 };
 </script>

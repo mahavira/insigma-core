@@ -2,6 +2,7 @@
   <div class="about">
     <h1>This is an about page</h1>
     <input type="text" v-model="msg">
+    <router-link to="/dashboard/post/1" replace>TO Post Item</router-link>
     <div ref="echarts" style="width:100%;height:1200px"></div>
   </div>
 </template>

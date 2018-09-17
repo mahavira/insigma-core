@@ -1,6 +1,6 @@
 import Layout from '@/layouts/Index.vue';
 
-export default [
+const routeList = [
   {
     path: '/dashboard',
     name: 'layout',
@@ -23,13 +23,11 @@ export default [
         path: '/dashboard/post',
         name: 'post',
         component: () => import('../views/Post.vue'),
-        children: [
-          {
-            path: '/dashboard/post/:id',
-            name: 'postitem',
-            component: () => import('../views/PostItem.vue'),
-          },
-        ],
+        children: [{
+          path: '/dashboard/post/:id',
+          name: 'postitem',
+          component: () => import('../views/PostItem.vue'),
+        }],
       },
     ],
   },
@@ -39,3 +37,13 @@ export default [
     component: () => import('../views/Login.vue'),
   },
 ];
+function original(data) {
+  return data.map((route) => {
+    if (!route.meta) route.meta = {};
+    route.meta.original = route.path;
+    if (route.children && route.children.length) route.children = original(route.children);
+    return route;
+  });
+}
+const routes = original(routeList);
+export default routes;

@@ -1,8 +1,14 @@
 import Vue from 'vue';
-import Router from 'vue-router';
+import VueRouter from 'vue-router';
 import routes from './routes';
+import { BASE_URL } from '../config';
 
-Vue.use(Router);
-export default new Router({
+Vue.use(VueRouter);
+const router = new VueRouter({
+  base: BASE_URL,
   routes,
 });
+router.beforeResolve((to, from, next) => {
+  next();
+});
+export default router;
