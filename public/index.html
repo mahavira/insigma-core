@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <title>框架</title>
   </head>
   <body>
@@ -14,6 +15,17 @@
     </noscript>
     <div id="app"></div>
     <script src="http://cdn.bootcss.com/echarts/4.1.0.rc2/echarts.min.js"></script>
+    <script src="http://cdn.bootcss.com/URI.js/1.19.1/URI.js"></script>
+    <script>
+    var source = "Hello 魂牵梦萦魂牵梦萦\n"
+      + "http://svn.lvhetao.com:18080/svn/leWork/lework_app_html/html/index.html#g=1&p=%E5%B2%97%E4%BD%8D%E8%AF%A6%E6%83%85&hi=1\n"
+      + "or quotes";
+
+      var result = URI.withinString(source, function(url) {
+          return "<a>" + url + "</a>";
+      });
+      console.log(result);
+    </script>
     <!-- built files will be auto injected -->
   </body>
 </html>

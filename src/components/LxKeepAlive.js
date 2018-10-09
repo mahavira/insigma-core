@@ -1,5 +1,8 @@
 import { mapMutations, mapActions } from 'vuex';
-import { ADD, REMOVE } from '../store/modules/tabs/types';
+import {
+  ADD as ADD_TAB,
+  REMOVE as REMOVE_TAB,
+} from '../store/modules/tabs/types';
 import { matches, remove, isDef } from '../shared/util';
 
 function isAsyncPlaceholder(node) {
@@ -70,7 +73,7 @@ export default {
     });
     // 当移除标签item时，也清除对应的cache
     this.$store.subscribe((mutation) => {
-      if (mutation.type === REMOVE) {
+      if (mutation.type === REMOVE_TAB) {
         pruneCacheEntry(this.cache, mutation.payload, this.keys);
       }
     });
@@ -79,8 +82,8 @@ export default {
     Object.keys(this.cache).forEach(key => pruneCacheEntry(this.cache, key, this.keys));
   },
   methods: {
-    ...mapMutations([REMOVE]),
-    ...mapActions([ADD]),
+    ...mapMutations([REMOVE_TAB]),
+    ...mapActions([ADD_TAB]),
   },
   render() {
     console.log('keep-alive');
@@ -105,18 +108,16 @@ export default {
         : vnode.key;
       key = `_${key}`;
 
-      const { tmp } = this.$router;
-      if (tmp && tmp.replace) {
-        const oldKey = tmp.key;
+      const { replaceData } = this.$router;
+      if (replaceData && replaceData.replace) {
+        const oldKey = replaceData.key;
         if (oldKey !== key) {
           pruneCacheEntry(this.cache, oldKey, this.keys);
-          this.$nextTick(() => {
-            this[REMOVE](oldKey);
-          });
+          this.$nextTick(() => this[REMOVE_TAB](oldKey));
         }
-        delete this.$router.tmp;
+        delete this.$router.replaceData;
       }
-      this.$nextTick(() => this[ADD]({
+      this.$nextTick(() => this[ADD_TAB]({
         key,
         item: {
           path: this.$route.path,

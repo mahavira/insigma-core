@@ -8,11 +8,8 @@
   </div>
 </template>
 <script>
-import LxRouterView from '../components/LxRouterView';
-
 export default {
   name: 'Post',
-  components: { LxRouterView },
   data() {
     return {
       posts: [{

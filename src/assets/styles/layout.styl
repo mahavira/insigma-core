@@ -1,0 +1,39 @@
+bgColor = #FFFFFF
+headerBgColor = #E7EEF2
+asideBgColor = #E7EEF2
+mainBgColor = #FFF
+.lx-container
+  display -webkit-box
+  display -ms-flexbox
+  display flex
+  flex-direction row
+  flex 1
+  flex-basis auto
+  box-sizing border-box
+  min-width 0
+.lx-container.lx-vertical
+  flex-direction column
+.lx-container.lx-full
+  height 100vh
+.lx-header, .lx-footer
+  background-color headerBgColor
+  line-height 60px
+.lx-header
+  padding 0 20px
+  box-sizing border-box
+  flex-shrink 0
+.lx-aside, .lx-main
+  overflow auto
+  box-sizing border-box
+.lx-aside
+  background-color asideBgColor
+  box-sizing border-box
+  flex-shrink 0
+  width 240px
+.lx-main
+  background-color mainBgColor
+  display block
+  flex 1
+  flex-basis auto
+  box-sizing border-box
+  padding 20px
