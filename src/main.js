@@ -8,6 +8,7 @@ import './service';
 import './filter';
 import './directive';
 import './assets/styles/index.styl';
+import './lib';
 
 Vue.use(ElementUI);
 Vue.config.productionTip = false;

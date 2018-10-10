@@ -17,7 +17,9 @@ export function isFalse(v) {
 export function isRegExp(v) {
   return toStr.call(v) === '[object RegExp]';
 }
-
+/**
+ * 移除数组项
+ */
 export function remove(arr, item) {
   if (arr.length) {
     const index = arr.indexOf(item);
@@ -27,6 +29,8 @@ export function remove(arr, item) {
   }
   return arr;
 }
+/**
+ */
 export function matches(pattern, name) {
   if (Array.isArray(pattern)) {
     return pattern.indexOf(name) > -1;

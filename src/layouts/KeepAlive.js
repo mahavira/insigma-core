@@ -71,7 +71,7 @@ export default {
     this.$watch('exclude', (val) => {
       pruneCache(this, name => !matches(val, name));
     });
-    // 当移除标签item时，也清除对应的cache
+    // 当关闭标签同时清除对应的cache
     this.$store.subscribe((mutation) => {
       if (mutation.type === REMOVE_TAB) {
         pruneCacheEntry(this.cache, mutation.payload, this.keys);
@@ -102,8 +102,6 @@ export default {
       ) return vnode;
       const { cache, keys } = this;
       let key = vnode.key == null
-        // same constructor may get registered as different local components
-        // so cid alone is not enough (#3269)
         ? componentOptions.Ctor.cid + (componentOptions.tag ? (`::${componentOptions.tag}`) : '')
         : vnode.key;
       key = `_${key}`;
@@ -123,6 +121,7 @@ export default {
           path: this.$route.path,
           fullPath: this.$route.fullPath,
           name: this.$route.name,
+          title: this.$route.meta.title || this.$route.name,
         },
       }));
       if (cache[key]) {

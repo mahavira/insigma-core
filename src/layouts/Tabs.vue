@@ -7,7 +7,7 @@
         @click="onClick(tab.fullPath)"
         :key="key">
         <div :class="$style['item-inner']">
-          <span>{{tab.name}}</span>
+          <span>{{tab.title}}</span>
           <a @click.stop="removeTab(key)" v-show="!isLastOne"><i class="el-icon-plus"></i></a>
         </div>
       </div>
@@ -18,9 +18,15 @@
       transition="el-zoom-in-bottom"
       trigger="hover">
       <el-button-group>
-        <el-button type="" icon="el-icon-edit"></el-button>
-        <el-button type="" icon="el-icon-share"></el-button>
-        <el-button type="" icon="el-icon-delete"></el-button>
+        <el-button>
+          <i class="fa fa-times-circle-o"></i>
+        </el-button>
+        <el-button>
+          <i class="fa fa-th"></i>
+        </el-button>
+        <el-button>
+          <i class="fa fa-window-maximize"></i>
+        </el-button>
       </el-button-group>
       <i class="el-icon-news" slot="reference"></i>
     </el-popover>
@@ -127,7 +133,7 @@ dividerColor = #A4B2C7
   &.active
     .item-inner
       background activeColor
-      box-shadow -1px 0 1px activeColor
+      box-shadow -1px 0 0 activeColor
       // margin-left -1px
       &:after
         visibility hidden
@@ -141,7 +147,7 @@ dividerColor = #A4B2C7
   &:hover:not(.active)
     .item-inner
       background hoverColor
-      box-shadow -1px 0 1px hoverColor
+      box-shadow -1px 0 0 hoverColor
       // margin-left -1px
       &:after
         visibility hidden
@@ -151,6 +157,7 @@ dividerColor = #A4B2C7
         &:hover
           background-color bgColor
     &:before
+      display none
       background hoverColor
 .item-inner
   padding 0 15px

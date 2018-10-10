@@ -10,6 +10,7 @@ const routeList = [
         path: '/dashboard',
         name: 'home',
         meta: {
+          title: '首页',
           keepAlive: false,
         },
         component: () => import('../views/Home.vue'),
@@ -17,6 +18,10 @@ const routeList = [
       {
         path: '/dashboard/about/:id',
         name: 'about',
+        meta: {
+          title: '关于我',
+          keepAlive: false,
+        },
         component: () => import('../views/About.vue'),
       },
       {
@@ -37,13 +42,13 @@ const routeList = [
     component: () => import('../views/Login.vue'),
   },
 ];
-function original(data) {
+function meta(data) {
   return data.map((route) => {
     if (!route.meta) route.meta = {};
     route.meta.original = route.path;
-    if (route.children && route.children.length) route.children = original(route.children);
+    if (route.children && route.children.length) route.children = meta(route.children);
     return route;
   });
 }
-const routes = original(routeList);
+const routes = meta(routeList);
 export default routes;

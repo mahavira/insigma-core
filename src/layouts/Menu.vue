@@ -2,12 +2,13 @@
   <el-menu
     :router="true"
     :default-active="$route.path"
-    background-color="#D3DCE6">
-      <menu-item v-for="item in routes" :key="item.path" :route="item">{{a}}</menu-item>
+    background-color="#E7EEF2">
+      <menu-item v-for="item in menus" :key="item.path" :route="item">{{a}}</menu-item>
   </el-menu>
 </template>
 <script>
 import MenuItem from './MenuItem.vue';
+import menu from '../config/menu';
 
 export default {
   name: 'home',
@@ -20,8 +21,8 @@ export default {
     };
   },
   computed: {
-    routes() {
-      return this.$router.options.routes;
+    menus() {
+      return menu;
     },
   },
   mounted() {

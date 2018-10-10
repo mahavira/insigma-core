@@ -18,5 +18,11 @@ export default {
   beforeRouteEnter(to, from, next) {
     next();
   },
+  data() {
+    return {
+    };
+  },
+  created() {
+  },
 };
 </script>
